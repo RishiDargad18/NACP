@@ -19,8 +19,8 @@ Methodology
 -----------
 1. **EWMA smoothing** on each input metric (RTT, loss, RSSI) so the engine
    reacts to the *link* rather than a single noisy reading. Same family of
-   estimator that TCP uses for RTT (Jacobson/Karels), tuned to alpha = 0.30
-   for our slower (1-30 s) sampling cadence.
+   estimator that TCP uses for RTT (Jacobson/Karels), tuned to alpha = 0.50
+   for a snappy demo response on our 1-8 s sampling cadence.
 
 2. **Jitter** is computed as an EWMA of |new_rtt - smoothed_rtt| (Jacobson
    RTTVAR), and contributes to the composite score. High variance is an
@@ -46,14 +46,15 @@ Methodology
 
 6. **Online self-calibration of thresholds** — the engine maintains a rolling
    window of the last HISTORY_SIZE smoothed samples of each metric. Once it
-   has at least MIN_SAMPLES_FOR_LEARN observations, the "good" and "poor"
-   edges of every metric are recomputed every tick as the 25th and 75th
-   percentile of that window. The hard-coded constants above are only the
-   cold-start fallback; once the engine has been running for ~20 samples it
-   defines "good RTT" as "the best quartile of what this link has actually
-   delivered". This is the same principle production anomaly-detection
-   systems use (median-absolute-deviation, interquartile-range baselining),
-   needs no training step, and adds a clear ML-style adaptation story.
+   has at least MIN_SAMPLES_FOR_LEARN observations, the GOOD edges of RTT
+   and jitter are recomputed every tick as the 25th percentile of their
+   respective windows (with sanity caps at 0.5x and 3x the hardcoded default).
+   Loss, RSSI, and every POOR edge stay hardcoded — they are objective
+   bounds the engine must never normalise away. So the engine self-calibrates
+   to whatever the link delivers (LAN, WiFi, cellular hotspot) while still
+   flagging objectively bad conditions. Same principle as production
+   anomaly-detection systems (best-observed baseline + interquartile range);
+   no training step, no external library, no GPU.
 
 The engine is side-effect-free (no I/O, no globals), so it stays unit-
 testable and could be swapped for an ML estimator without touching app.py.
