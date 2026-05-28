@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adaptive IoT Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">A</div>
+      <div>
+        <h1>Network-Aware Adaptive IoT Communication</h1>
+        <p class="sub">Real-time telemetry &amp; feedback control for ESP32 nodes</p>
+      </div>
+    </div>
+    <div class="status">
+      <div class="kpi">
+        <span class="kpi-label">Device</span>
+        <span class="kpi-value" id="deviceId">—</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Device link</span>
+        <span class="kpi-value status-dot" id="deviceLink">● awaiting…</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Network state</span>
+        <span class="kpi-value badge" id="state">—</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Last update</span>
+        <span class="kpi-value" id="lastUpdate">—</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Server</span>
+        <span class="kpi-value status-dot" id="serverStatus">●</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="metrics-grid">
+    <div class="metric-card">
+      <h3>RTT</h3>
+      <div class="metric-value"><span id="rtt">—</span><span class="unit">ms</span></div>
+    </div>
+    <div class="metric-card">
+      <h3>Packet loss</h3>
+      <div class="metric-value"><span id="loss">—</span><span class="unit">%</span></div>
+    </div>
+    <div class="metric-card">
+      <h3>RSSI</h3>
+      <div class="metric-value"><span id="rssi">—</span><span class="unit">dBm</span></div>
+    </div>
+    <div class="metric-card">
+      <h3>Throughput</h3>
+      <div class="metric-value"><span id="throughput">—</span><span class="unit">Kbps</span></div>
+    </div>
+    <div class="metric-card">
+      <h3>TX interval</h3>
+      <div class="metric-value"><span id="interval">—</span><span class="unit">ms</span></div>
+    </div>
+    <div class="metric-card">
+      <h3>Packet size</h3>
+      <div class="metric-value"><span id="packetSize">—</span><span class="unit">bytes</span></div>
+    </div>
+  </section>
+
+  <section class="charts">
+    <div class="chart-card"><h3>RTT (ms)</h3><canvas id="chartRtt"></canvas></div>
+    <div class="chart-card"><h3>Packet loss (%)</h3><canvas id="chartLoss"></canvas></div>
+    <div class="chart-card"><h3>RSSI (dBm)</h3><canvas id="chartRssi"></canvas></div>
+    <div class="chart-card"><h3>Throughput (Kbps)</h3><canvas id="chartThroughput"></canvas></div>
+    <div class="chart-card"><h3>Adaptive TX interval (ms)</h3><canvas id="chartInterval"></canvas></div>
+    <div class="chart-card"><h3>Adaptive packet size (bytes)</h3><canvas id="chartPacketSize"></canvas></div>
+  </section>
+
+  <section class="demo-card">
+    <div class="demo-header">
+      <h3>Demo controls &mdash; inject network conditions</h3>
+      <span class="pill" id="chaosPill">delay 0 ms / drop 0 %</span>
+    </div>
+    <div class="demo-buttons">
+      <button class="demo-btn good"  data-level="healthy">Healthy</button>
+      <button class="demo-btn warn"  data-level="congested">Congested</button>
+      <button class="demo-btn bad"   data-level="severe">Severe</button>
+    </div>
+    <p class="demo-note">
+      Server-side injection adds artificial latency and randomly drops a
+      percentage of ACKs so the adaptive Good &rarr; Moderate &rarr; Poor
+      transition can be demonstrated on demand.
+    </p>
+  </section>
+
+  <section class="logs-card">
+    <div class="logs-header">
+      <h3>Live logs &amp; alerts</h3>
+      <span class="pill" id="recordCount">0 records</span>
+    </div>
+    <div id="logs" class="logs"></div>
+  </section>
+
+  <footer>
+    <span>
+      Network-Aware Adaptive IoT Communication System &middot;
+      ESP32 + Flask + Chart.js &middot;
+      Academic Mini-Project
+    </span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+# --- Runtime data (regenerated on every run) ---
+server/data/metrics.db
+server/data/metrics.csv
+server/data/*.db-journal
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+*.egg-info/
+
+# --- IDE / editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS junk ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Arduino build artefacts ---
+esp32/build/
+*.elf
+*.bin
+*.hex
+
+# --- Local secrets (in case you split credentials out later) ---
+esp32/secrets.h
+.env
+*.local
